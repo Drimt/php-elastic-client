@@ -7,3 +7,6 @@ composer.phar
 /nbproject/private/
 /.phpunit.cache/
 .env
+
+/volumes/
+/.cache/

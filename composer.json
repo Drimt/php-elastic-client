@@ -21,6 +21,7 @@
         }
     ],
     "config": {
+        "cache-dir": "./.cache",
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
         }
