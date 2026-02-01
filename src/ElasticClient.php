@@ -23,10 +23,10 @@ class ElasticClient
     
 
     /**
-     * 
+     *
      * @param string $endpoint
      * @param array $payload
-     * 
+     *
      * @throws \RuntimeException
      */
     public function post(string $endpoint, array $payload)
