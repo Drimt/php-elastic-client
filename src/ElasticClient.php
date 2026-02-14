@@ -26,21 +26,26 @@ class ElasticClient
      *
      * @param string $endpoint
      * @param array $payload
+     * @param bool $post Perform a POST request
      *
      * @throws \RuntimeException
      */
-    public function post(string $endpoint, array $payload)
+    private function query(string $endpoint, ?array $payload = null, string $method = "GET")
     {
         $ch = curl_init($this->host . $endpoint);
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POST => true,
+            //CURLOPT_POST => $post,
+            CURLOPT_CUSTOMREQUEST => $method,
             CURLOPT_HTTPHEADER => [
                 'Content-Type: application/json'
             ],
             CURLOPT_USERPWD => $this->username . ":" . $this->password,
-            CURLOPT_POSTFIELDS => json_encode($payload),
         ]);
+        
+        if (! is_null($payload)) {
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+        }
 
         $response = curl_exec($ch);
         if ($response === false) {
@@ -48,6 +53,29 @@ class ElasticClient
         }
         curl_close($ch);
         
-        return json_decode($response, true);
+        return json_decode($response, false);
+    }
+    
+    public function post(string $endpoint, array $payload)
+    {
+        return $this->query($endpoint, $payload, "POST");
+    }
+    
+    public function get(string $endpoint, ?array $payload = null)
+    {
+        return $this->query($endpoint, $payload, "GET");
+    }
+    
+    public function delete(string $endpoint, ?array $payload = null)
+    {
+        return $this->query($endpoint, $payload, "DELETE");
+    }
+    /**
+     * Get an instance of API keys store.
+     * @return Keys
+     */
+    public function keys() : Keys
+    {
+        return new Keys($this);
     }
 }

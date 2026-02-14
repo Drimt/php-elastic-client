@@ -20,15 +20,29 @@ class ElasticClientTest extends TestCase
         $dotenv->load();
     }
     
+    public function client() : ElasticClient
+    {
+        return new ElasticClient("http://127.0.0.1:9200", "elastic", $_ENV["ES_PASSWORD"]);
+    }
     
     public function testSetUserPassword()
     {
-        $client = new ElasticClient("http://127.0.0.1:9200", "elastic", $_ENV["ES_PASSWORD"]);
-        $result = $client->post(
+        $result = $this->client()->post(
             "/_security/user/kibana_system/_password",
             ['password' => $_ENV["KIBANA_PASSWORD"]]
         );
+    }
+    
+    public function testCreateListDeleteAPIKey()
+    {
+        $count = count($this->client()->keys()->active());
+        $this->assertIsString($this->client()->keys()->create("my-test-key"));
+        $this->assertEquals($count + 1, count($this->client()->keys()->active()));
         
-        $this->assertEquals([], $result);
+        foreach ($this->client()->keys()->active() as $key) {
+            $key->delete();
+        }
+        
+        $this->assertEquals(0, count($this->client()->keys()->active()));
     }
 }
