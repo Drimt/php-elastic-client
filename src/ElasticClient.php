@@ -26,7 +26,7 @@ class ElasticClient
      *
      * @param string $endpoint
      * @param array $payload
-     * @param bool $post Perform a POST request
+     * @param string $method method to use (POST, GET, DELETE etc.)
      *
      * @throws \RuntimeException
      */

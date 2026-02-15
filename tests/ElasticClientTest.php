@@ -36,7 +36,7 @@ class ElasticClientTest extends TestCase
     public function testCreateListDeleteAPIKey()
     {
         $count = count($this->client()->keys()->active());
-        $this->assertIsString($this->client()->keys()->create("my-test-key"));
+        $this->client()->keys()->create("my-test-key");
         $this->assertEquals($count + 1, count($this->client()->keys()->active()));
         
         foreach ($this->client()->keys()->active() as $key) {

@@ -45,7 +45,6 @@ class Key
     /**
      *
      * @see https://www.elastic.co/docs/api/doc/elasticsearch/operation/operation-security-invalidate-api-key
-     * @return type
      */
     public function delete()
     {
