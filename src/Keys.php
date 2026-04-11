@@ -45,11 +45,11 @@ class Keys
     }
     
     /**
-     * Create an API key and return the secret token.
+     * Create an API key and return the (md5) encoded secret token.
      * @param string $name
      */
     public function create(string $name) : string
     {
-        return $this->client->post("/_security/api_key", ["name" => $name])->api_key;
+        return $this->client->post("/_security/api_key", ["name" => $name])->encoded;
     }
 }
