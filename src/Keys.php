@@ -7,15 +7,8 @@ namespace Drimt\ElasticClient;
  *
  * @author tibo
  */
-class Keys
+class Keys extends Store
 {
-    private $client;
-    
-    public function __construct(ElasticClient $client)
-    {
-        $this->client = $client;
-    }
-    
     /**
      * List all active (not invalidated) API keys.
      * @return array
@@ -32,14 +25,14 @@ class Keys
     public function all() : array
     {
         // ?invalidated=false
-        $result = $this->client->get("/_security/api_key");
+        $result = $this->client()->get("/_security/api_key");
         if (! isset($result->api_keys)) {
             return [];
         }
         
         $a = [];
         foreach ($result->api_keys as $key) {
-            $a[] = Key::fromStdClass($key, $this->client);
+            $a[] = Key::fromStdClass($key, $this->client());
         }
         return $a;
     }
@@ -50,6 +43,6 @@ class Keys
      */
     public function create(string $name) : string
     {
-        return $this->client->post("/_security/api_key", ["name" => $name])->encoded;
+        return $this->client()->post("/_security/api_key", ["name" => $name])->encoded;
     }
 }

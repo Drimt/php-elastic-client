@@ -20,27 +20,9 @@ class Key
     public string $realm_type;
     public object $metadata;
     public object $role_descriptors;
-    
-    private ElasticClient $client;
 
 
-    public static function fromStdClass(\stdClass $in, ElasticClient $client): self
-    {
-        $out = new self();
-        $reflection = new \ReflectionObject($in);
-        $properties = $reflection->getProperties();
-
-        foreach ($properties as $property) {
-            $name = $property->getName();
-            if (property_exists(self::class, $name)) {
-                $out->$name = $in->$name;
-            }
-        }
-        
-        $out->client = $client;
-        
-        return $out;
-    }
+    use FromStdClass;
     
     /**
      *

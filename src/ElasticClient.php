@@ -32,6 +32,22 @@ class ElasticClient
      */
     private function query(string $endpoint, ?array $payload = null, string $method = "GET")
     {
+        $json = null;
+        if (! is_null($payload)) {
+            $json = json_encode($payload);
+        }
+        return $this->json($endpoint, $json, $method);
+    }
+    
+    /**
+     * Perform a query with already encoded json payload.
+     *
+     * @param string $endpoint
+     * @param string $json
+     * @param string $method
+     */
+    public function json(string $endpoint, ?string $json, string $method = "GET")
+    {
         $ch = curl_init($this->host . $endpoint);
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
@@ -43,8 +59,8 @@ class ElasticClient
             CURLOPT_USERPWD => $this->username . ":" . $this->password,
         ]);
         
-        if (! is_null($payload)) {
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+        if (! is_null($json)) {
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
         }
 
         $response = curl_exec($ch);
@@ -70,6 +86,7 @@ class ElasticClient
     {
         return $this->query($endpoint, $payload, "DELETE");
     }
+    
     /**
      * Get an instance of API keys store.
      * @return Keys
@@ -77,5 +94,14 @@ class ElasticClient
     public function keys() : Keys
     {
         return new Keys($this);
+    }
+    
+    /**
+     * Get an instance of the index templates store.
+     * @return Templates
+     */
+    public function templates() : Templates
+    {
+        return new Templates($this);
     }
 }

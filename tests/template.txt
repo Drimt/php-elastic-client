@@ -1,0 +1,36 @@
+{
+  "index_patterns": [
+    "p1sensor-*"
+  ],
+  "template": {
+    "settings": {
+      "index": {
+        "mode": "standard",
+        "routing": {
+          "allocation": {
+            "include": {
+              "_tier_preference": "data_hot"
+            }
+          }
+        }
+      }
+    },
+    "mappings": {
+      "_data_stream_timestamp": {
+        "enabled": true
+      },
+      "properties": {
+        "@timestamp": {
+          "type": "date"
+        },
+        "sensor": {
+          "type": "keyword"
+        },
+        "value": {
+          "type": "float"
+        }
+      }
+    },
+    "aliases": {}
+  }
+}
